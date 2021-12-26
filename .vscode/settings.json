@@ -1,0 +1,15 @@
+{
+	"files.associations": {
+		"neogeo.h": "c",
+		"constants.h": "c",
+		"terrainentity.h": "c",
+		"level2.h": "c",
+		"entitygraphicdefs.h": "c",
+		"levelmeta.h": "c",
+		"level1.h": "c",
+		"random": "c",
+		"types.h": "c",
+		"*.tcc": "c"
+	},
+	"C_Cpp.clang_format_fallbackStyle": "WebKit"
+}

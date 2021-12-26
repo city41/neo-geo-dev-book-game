@@ -1,0 +1,11 @@
+{
+	"romPathRoot": "../src/rom/202-",
+	"sromImages": {
+		"inputs": [
+			{
+				"name": "font",
+				"imageFile": "./fixFont.png"
+			}
+		]
+	}
+}
