@@ -22,7 +22,7 @@ include ../Makefile.config
 include ../Makefile.common
 $(CART): $(PROM) $(CROM1) $(CROM2) $(SROM) $(VROM) $(MROM) | rom
 
-OBJS=main
+OBJS=main paletteDefs
 ELF=rom.elf
 
 $(ELF):	$(OBJS:%=%.o)

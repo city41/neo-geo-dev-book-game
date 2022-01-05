@@ -1,0 +1,8 @@
+#include "paletteDefs.h"
+
+const u16 palettes[NUM_PALETTE_ENTRIES] = {
+<% palettes.forEach(function(palette, i, a) { -%>
+    // palette <%= i %>
+    <%= palette.map(c => '0x' + c.toString(16)).join(', ') %><% if (i < a.length - 1) { %>,<%}%>
+<% }); -%>
+};
