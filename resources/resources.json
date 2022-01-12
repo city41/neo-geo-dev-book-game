@@ -26,6 +26,11 @@
 			{
 				"name": "paddle",
 				"imageFile": "./paddle.png"
+			},
+			{
+				"name": "ball",
+				"imageFile": "./ball.png",
+				"autoAnimation": 4
 			}
 		]
 	}

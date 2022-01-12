@@ -126,4 +126,7 @@ gngeo-fullscreen:
 
 endif
 
+mame:
+	cp $(CART) ~/mame/roms && mame -w -nofilter puzzledp
+
 .PHONY: gngeo gngeo-fullscreen
