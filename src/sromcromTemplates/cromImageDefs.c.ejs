@@ -1,0 +1,21 @@
+#include "cromImageDefs.h"
+
+<% images.forEach(function(image, i) { -%>
+const struct TileDef <%= image.name %>_tileDefs[<%= image.tiles.flat(1).length %>] = {
+<% image.tiles.flat(1).forEach(function(tile, i, a) { -%>
+    { 
+        .index = <%= tile.index %>, 
+        .palette = <%= tile.paletteIndex %>,
+        .autoAnimation = <%= image.autoAnimation || 0 %>
+    }<% if (i < a.length - 1) { %>,
+<% } -%>
+<% }); %>
+};
+
+const struct TileImageDef <%= image.name %>_cromImageDef = {
+    .tiles = <%= image.name %>_tileDefs,
+    .width = <%= image.tiles[0].length %>,
+    .height = <%= image.tiles.length %>,
+};
+
+<% }); %>

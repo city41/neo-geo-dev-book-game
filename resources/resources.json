@@ -13,23 +13,22 @@
 				}
 		]
 	},
-	"sromImages": {
-		"inputs": [
-			{
-				"name": "font",
-				"imageFile": "./fixFont.png"
-			}
-		]
-	},
 	"cromImages": {
+		"codeEmit": [
+				{
+						"template": "../src/sromcromTemplates/cromImageDefs.h.ejs",
+						"dest": "../src/cromImageDefs.h"
+				},
+				{
+						"template": "../src/sromcromTemplates/cromImageDefs.c.ejs",
+						"dest": "../src/cromImageDefs.c"
+				}
+		],
 		"inputs": [
 			{
-				"name": "paddle",
-				"imageFile": "./paddle.png"
-			},
-			{
-				"name": "ball",
-				"imageFile": "./ball.png",
+				"name": "campFire",
+				"imageFile": "./campFire.png",
+				"tileWidth": 2,
 				"autoAnimation": 4
 			}
 		]

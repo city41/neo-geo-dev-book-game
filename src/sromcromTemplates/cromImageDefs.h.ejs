@@ -1,0 +1,6 @@
+#pragma once
+#include "tileImage.h"
+
+<% images.forEach(function(image) { -%>
+const struct TileImageDef <%= image.name %>_cromImageDef;
+<% }); -%>
