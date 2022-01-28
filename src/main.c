@@ -4,7 +4,13 @@
 // as s8 (signed 8 bit value, ie a signed byte), u16 (unsigned 16 bit value), etc.
 #include <ngdevkit/neogeo.h>
 // pull in our palette definitions
+#include "animationDef.h"
+#include "cromAnimationDefs.h"
 #include "paletteDefs.h"
+
+typedef u8 BOOL;
+#define TRUE 1
+#define FALSE 0
 
 // Address of Sprite Control Block in VRAM
 #define ADDR_SCB1 0
@@ -29,8 +35,16 @@ struct Entity
     s16 velY;
 };
 
+struct BallAnimation
+{
+    u8 currentFrame;
+    u8 currentDuration;
+};
+
 struct Entity paddle = { .x = 16, .y = 200 };
 struct Entity ball = { .x = 152, .y = 32, .velX = 1, .velY = 1 };
+
+struct BallAnimation ballAnimation;
 
 // Load our palettes into RAM
 // MMAP_PALBANK1 is the location in main RAM where
@@ -112,9 +126,9 @@ void load_paddle() {
         // two are sticky and chain up to the first sprite
         u8 sticky = tx != 0;
 
-        // set our tile index, in this simple case, the ball is located first
-        // in the C ROM, so we need to move past it
-        *REG_VRAMRW = tx + 4;
+        // set our tile index, we know the paddle starts at tile index 0 by
+        // looking at the tiles in neospriteviewer
+        *REG_VRAMRW = tx;
         // set the palette for this tile. This word also allows setting other things
         // such as whether the tile is flipped or not, but we don't need any of that today
         *REG_VRAMRW = palette << 8;
@@ -137,24 +151,19 @@ void load_paddle() {
 
 // sets up the fourth sprite in VRAM to be our paddle.
 void load_ball() {
-    // if you look in paletteDefs.c, you will see the third palette (index 2)
-    // is the correct palette for the ball
-    const u8 palette = 2;
-
-    // the ball uses auto animation, so this flag will turn it on
-    const u8 autoAnimation = 1;
+    u8 ballTileIndex = animationDef_ball_spin.frames[ballAnimation.currentFrame].tileIndex;
+    u8 paletteIndex = animationDef_ball_spin.frames[ballAnimation.currentFrame].paletteIndex;
 
     // set the vram address register to the location for this sprite's tile map
     *REG_VRAMADDR = ADDR_SCB1 + BALL_SPRITE_INDEX * SCB1_SPRITE_ENTRY_SIZE;
     // every time we write to vram, VRAMADDR will increase by one
     *REG_VRAMMOD = 1;
 
-    // set our tile index, in this simple case, our loop variable matches
-    // the tiles in our C ROM exactly
-    *REG_VRAMRW = 0;
+    // set our tile index
+    *REG_VRAMRW = ballTileIndex;
     // set the palette for this tile. This word also allows setting other things
     // such as whether the tile is flipped or not, but we don't need any of that today
-    *REG_VRAMRW = palette << 8 | (autoAnimation << 2);
+    *REG_VRAMRW = paletteIndex << 8;
 
     // move to sprite control bank 2 to set the sprite's scaling
     *REG_VRAMADDR = ADDR_SCB2 + BALL_SPRITE_INDEX;
@@ -169,6 +178,25 @@ void load_ball() {
     *REG_VRAMRW = (TO_SCREEN_Y(ball.y) << 7) | 1;
     // now in SCB4, we set x position
     *REG_VRAMRW = TO_SCREEN_X(ball.x) << 7;
+}
+
+// updates the current ball tile to match the current state of the animation
+// notice we are only updating the ball tile index and the palette. Actually updating the sprite's
+// location is still handled by move_ball below
+void update_tile_ball() {
+    u8 ballTileIndex = animationDef_ball_spin.frames[ballAnimation.currentFrame].tileIndex;
+    u8 paletteIndex = animationDef_ball_spin.frames[ballAnimation.currentFrame].paletteIndex;
+
+    // set the vram address register to the location for this sprite's tile map
+    *REG_VRAMADDR = ADDR_SCB1 + BALL_SPRITE_INDEX * SCB1_SPRITE_ENTRY_SIZE;
+    // every time we write to vram, VRAMADDR will increase by one
+    *REG_VRAMMOD = 1;
+
+    // set our tile index
+    *REG_VRAMRW = ballTileIndex;
+    // set the palette for this tile. This word also allows setting other things
+    // such as whether the tile is flipped or not, but we don't need any of that today
+    *REG_VRAMRW = paletteIndex << 8;
 }
 
 // updates the paddle sprite's location. since we are only changing the location,
@@ -232,6 +260,24 @@ void ball_logic() {
     }
 }
 
+BOOL ball_animation_logic() {
+    ballAnimation.currentDuration += 1;
+
+    if (ballAnimation.currentDuration == animationDef_ball_spin.frameDuration) {
+        ballAnimation.currentFrame += 1;
+
+        if (ballAnimation.currentFrame == animationDef_ball_spin.frameCount) {
+            ballAnimation.currentFrame = 0;
+        }
+
+        ballAnimation.currentDuration = 0;
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 // this is set to volatile because it will get changed in our
 // vblank callback. that callback is invoked by the bios, so gcc
 // doesn't understand how or why this could change. the volatile
@@ -284,6 +330,10 @@ int main() {
         }
 
         ball_logic();
+        // update the current state of the ball's animation
+        // if this function returns TRUE, then it is time to display the next frame
+        // of the animation, which we do below during vblank
+        BOOL tileNeedsUpdating = ball_animation_logic();
 
         // we don't want to change the paddle's sprite location
         // until vblank has occured, that way the screen always
@@ -294,6 +344,11 @@ int main() {
         // will be just fine
         move_paddle();
         move_ball();
+
+        if (tileNeedsUpdating) {
+            // above ball_animation_logic told us to update the animation
+            update_tile_ball();
+        }
     }
 
     // we never actually get to this return, but we will

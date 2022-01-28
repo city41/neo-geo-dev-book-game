@@ -26,11 +26,31 @@
 			{
 				"name": "paddle",
 				"imageFile": "./paddle.png"
-			},
+			}
+		]
+	},
+	"cromAnimations": {
+		"codeEmit": [
+				{
+						"template": "../src/sromcromTemplates/cromAnimationDefs.h.ejs",
+						"dest": "../src/cromAnimationDefs.h"
+				},
+				{
+						"template": "../src/sromcromTemplates/cromAnimationDefs.c.ejs",
+						"dest": "../src/cromAnimationDefs.c"
+				}
+		],
+		"inputs": [
 			{
 				"name": "ball",
-				"imageFile": "./ball.png",
-				"autoAnimation": 4
+				"animations": [
+					{
+						"name": "spin",
+						"imageFile": "./ball.png",
+						"tileWidth": 1,
+						"frameDuration": 10
+					}
+				]
 			}
 		]
 	}
