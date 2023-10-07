@@ -2,16 +2,18 @@
 	"romPathRoot": "../src/rom/202-",
 	"padCROMFilesTo": 1048576,
 	"palettes": {
-		"codeEmit": [
+		"codeEmit": {
+			"inputs": [
 				{
-						"template": "../src/sromcromTemplates/paletteDefs.h.ejs",
+						"template": "../src/sromcromTemplates/paletteDefs.h.hbr",
 						"dest": "../src/paletteDefs.h"
 				},
 				{
-						"template": "../src/sromcromTemplates/paletteDefs.c.ejs",
+						"template": "../src/sromcromTemplates/paletteDefs.c.hbr",
 						"dest": "../src/paletteDefs.c"
 				}
-		]
+			]
+		}
 	},
 	"sromImages": {
 		"inputs": [
