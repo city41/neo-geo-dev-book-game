@@ -2,16 +2,18 @@
 	"romPathRoot": "../src/rom/202-",
 	"padCROMFilesTo": 1048576,
 	"palettes": {
-		"codeEmit": [
+		"codeEmit": {
+			"inputs": [
 				{
-						"template": "../src/sromcromTemplates/paletteDefs.h.ejs",
+						"template": "../src/sromcromTemplates/paletteDefs.h.hbr",
 						"dest": "../src/paletteDefs.h"
 				},
 				{
-						"template": "../src/sromcromTemplates/paletteDefs.c.ejs",
+						"template": "../src/sromcromTemplates/paletteDefs.c.hbr",
 						"dest": "../src/paletteDefs.c"
 				}
-		]
+			]
+		}
 	},
 	"sromImages": {
 		"inputs": [
@@ -30,16 +32,18 @@
 		]
 	},
 	"cromAnimations": {
-		"codeEmit": [
+		"codeEmit": {
+			"inputs": [
 				{
-						"template": "../src/sromcromTemplates/cromAnimationDefs.h.ejs",
+						"template": "../src/sromcromTemplates/cromAnimationDefs.h.hbr",
 						"dest": "../src/cromAnimationDefs.h"
 				},
 				{
-						"template": "../src/sromcromTemplates/cromAnimationDefs.c.ejs",
+						"template": "../src/sromcromTemplates/cromAnimationDefs.c.hbr",
 						"dest": "../src/cromAnimationDefs.c"
 				}
-		],
+			]
+		},
 		"inputs": [
 			{
 				"name": "ball",

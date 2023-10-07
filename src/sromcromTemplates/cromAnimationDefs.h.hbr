@@ -1,0 +1,13 @@
+#pragma once
+#include "animationDef.h"
+
+{{#each animationGroups}}
+// start {{name}}
+
+    {{#each animations}}
+const struct AnimationDef animationDef_{{../name}}_{{name}};
+    {{/each}}
+
+// end {{name}}
+
+{{/each}}

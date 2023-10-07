@@ -1,0 +1,25 @@
+#include "cromAnimationDefs.h"
+
+{{#each animationGroups}}
+// start {{name}}
+
+    {{#each animations}}
+const struct FrameDef frameDefs_{{../name}}_{{name}}[{{count frames}}] = {
+        {{#each frames as |frame|}}
+    {
+        .tileIndex = {{frame.[0].[0].index}},
+        .paletteIndex = {{frame.[0].[0].paletteIndex}},
+    }{{#unless @last}},{{/unless}}
+        {{/each}}
+};
+
+const struct AnimationDef animationDef_{{../name}}_{{name}} = {
+    .frames = frameDefs_{{../name}}_{{name}},
+    .frameCount = {{count frames}}, 
+    .frameDuration = {{default custom.frameDuration 0}}
+};
+
+    {{/each}}
+
+// end {{name}}
+{{/each}}
