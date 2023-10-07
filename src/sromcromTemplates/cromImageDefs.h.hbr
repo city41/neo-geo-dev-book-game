@@ -1,0 +1,6 @@
+#pragma once
+#include "tileImage.h"
+
+{{#each images}}
+const struct TileImageDef {{image.name}}_cromImageDef;
+{{/each}}

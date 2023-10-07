@@ -1,0 +1,10 @@
+#include "paletteDefs.h"
+
+const u16 palettes[NUM_PALETTE_ENTRIES] = {
+{{#each palettes as |palette|}}
+  // palette {{@index}}
+  {{#each palette as |num|}}
+  0x{{hex num}}{{#unless @last}},{{/unless}}
+  {{/each}}
+{{#unless @last}},{{/unless}}
+{{/each}}

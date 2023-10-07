@@ -1,0 +1,18 @@
+#include "cromImageDefs.h"
+
+{{#each images}}
+const struct TileDef {{name}}_tileDefs[{{count tiles flatten=true}}] = {
+    {{#each (flat tiles)}}
+    {
+        .index = {{index}}
+        .palette = {{paletteIndex}},
+        .autoAnimation = {{default autoAnimation 0}},
+    }{{#unless @last}},{{/unless}}
+    {{/each}}
+};
+const struct TileImageDef {{name}}_cromImageDef = {
+    .tiles = {{name}}_tileDefs,
+    .width = {{count tiles.[0]}},
+    .height = {{count tiles}}
+};
+{{/each}}
